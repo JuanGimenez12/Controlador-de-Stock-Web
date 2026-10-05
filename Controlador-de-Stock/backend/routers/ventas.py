@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from modelo.conexion import get_db
-from modelo import modelos
+from modelo import modelo
 from schemas import esquemas
 
 router = APIRouter(
@@ -18,9 +18,9 @@ def registrar_venta(venta_in: esquemas.VentaCreate, db: Session = Depends(get_db
     # 2. Recorremos cada producto que mandó el cajero
     for item in venta_in.detalles:
         # Buscamos el producto en la base de datos (y nos aseguramos que esté activo)
-        producto = db.query(modelos.Producto).filter(
-            modelos.Producto.id_producto == item.id_producto,
-            modelos.Producto.activo == True
+        producto = db.query(modelo.Producto).filter(
+            modelo.Producto.id_producto == item.id_producto,
+            modelo.Producto.activo == True
         ).first()
 
         if not producto:
@@ -41,7 +41,7 @@ def registrar_venta(venta_in: esquemas.VentaCreate, db: Session = Depends(get_db
         producto.stock_actual -= item.cantidad
 
         # 5. Armamos el renglón del ticket (Detalle)
-        nuevo_detalle = modelos.DetalleVenta(
+        nuevo_detalle = modelo.DetalleVenta(
             id_producto=producto.id_producto,
             cantidad=item.cantidad,
             precio_unitario=producto.precio_venta, # Congelamos el precio histórico
@@ -50,7 +50,7 @@ def registrar_venta(venta_in: esquemas.VentaCreate, db: Session = Depends(get_db
         detalles_a_guardar.append(nuevo_detalle)
 
     # 6. Creamos la cabecera de la venta
-    nueva_venta = modelos.Venta(
+    nueva_venta = modelo.Venta(
         total=total_venta,
         medio_pago=venta_in.medio_pago,
         detalles=detalles_a_guardar

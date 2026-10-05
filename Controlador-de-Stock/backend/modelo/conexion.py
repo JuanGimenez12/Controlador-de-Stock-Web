@@ -6,15 +6,16 @@ from dotenv import load_dotenv
 # Cargar las variables del archivo .env
 load_dotenv()
 
-DB_USER = os.getenv("DB_USER", "root")
-DB_PASS = os.getenv("DB_PASS", "")
+# Valores por defecto apuntando a PostgreSQL
+DB_USER = os.getenv("DB_USER", "postgres")
+DB_PASS = os.getenv("DB_PASS", "") 
 DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT", "3306")
-DB_NAME = os.getenv("DB_NAME", "sistema_kiosco")
+DB_PORT = os.getenv("DB_PORT", "5432") # Puerto de PostgreSQL
+DB_NAME = os.getenv("DB_NAME", "Sistema_Stock.db") # El nombre que le pusiste en pgAdmin
 
-# Forma segura y a prueba de errores para armar la conexión
+# Forma segura y a prueba de errores para armar la conexión a Postgres
 url_segura = URL.create(
-    drivername="mysql+mysqlconnector",
+    drivername="postgresql", # El driver cambia a postgresql
     username=DB_USER,
     password=DB_PASS,
     host=DB_HOST,
@@ -31,6 +32,10 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Base para crear los modelos
 Base = declarative_base()
 
-# Función para obtener la sesión en el Presentador
+# Función para obtener la sesión en FastAPI
 def get_db():
-    return SessionLocal()
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

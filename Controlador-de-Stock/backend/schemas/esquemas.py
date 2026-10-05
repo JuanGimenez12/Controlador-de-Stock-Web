@@ -3,6 +3,14 @@ from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional
 from datetime import date
+from pydantic import BaseModel
+
+class ProductoCrear(BaseModel):
+    codigo: str
+    nombre: str
+    precio: float
+    stock: int
+
 
 # --- ESQUEMAS PARA CATEGORÍA ---
 class CategoriaBase(BaseModel):
