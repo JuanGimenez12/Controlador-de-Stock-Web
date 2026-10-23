@@ -25,11 +25,14 @@ class Producto(Base):
     id_proveedor = Column(Integer, ForeignKey("proveedores.id_proveedor"), nullable=True)
     codigo_barras = Column(String(50), nullable=True)
     nombre = Column(String(150), nullable=False)
+    marca = Column(String(100), nullable=True)         # <-- NUEVO
+    descripcion = Column(String(255), nullable=True)
     precio_costo = Column(Numeric(10, 2), nullable=False)
     precio_venta = Column(Numeric(10, 2), nullable=False)
     stock_actual = Column(Integer, default=0)
     stock_minimo = Column(Integer, default=0)
     unidad_medida = Column(String(20), default="Unidad")
+    unidades_por_caja = Column(Integer, default=1)
     fecha_vencimiento = Column(Date, nullable=True)
     activo = Column(Boolean, default=True)
 

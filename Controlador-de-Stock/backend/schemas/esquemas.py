@@ -6,11 +6,19 @@ from datetime import date
 from pydantic import BaseModel
 
 class ProductoCrear(BaseModel):
-    codigo: str
+    codigo_barras: Optional[str] = None
     nombre: str
-    precio: float
-    stock: int
-
+    marca: Optional[str] = None          
+    descripcion: Optional[str] = None
+    precio_costo: float
+    precio_venta: float
+    stock_actual: int
+    stock_minimo: Optional[int] = 0
+    unidad_medida: Optional[str] = "Unidad"
+    unidades_por_caja: Optional[int] = 1
+    fecha_vencimiento: Optional[date] = None
+    id_categoria: Optional[int] = None
+    id_proveedor: Optional[int] = None
 
 # --- ESQUEMAS PARA CATEGORÍA ---
 class CategoriaBase(BaseModel):
